@@ -65,14 +65,43 @@ function Header() {
   );
 }
 function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzaData.length;
   return (
     <main className="menu">
       <h2>Our menu</h2>
-      <Pizza />
-      <Pizza />
-      <Pizza />
-      <Pizza />
+
+      {numPizzas > 0 ? (
+        <>
+          <p>
+            Indulge in our authentic Italian flavors with handcrafted focaccia
+            and a variety of classic pizzas, featuring fresh ingredients and
+            traditional recipes each bursting with vibrant flavors and premium
+            toppings.
+          </p>
+          <ul className="pizzas">
+            {pizzas.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>We're still working on our menu. Please come back :) </p>
+      )}
     </main>
+  );
+}
+function Pizza({ pizzaObj }) {
+  return (
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
+      <div>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
+      </div>
+    </li>
   );
 }
 function Footer() {
@@ -83,18 +112,20 @@ function Footer() {
 
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}.{" "}
-      {isOpen ? "We're currently open" : "We're currently closed"}
+      {isOpen ? (
+        <Order closeHour={closeHour} openHour={openHour} />
+      ) : (
+        <p>We're currently closed until {openHour}:00</p>
+      )}
     </footer>
   );
 }
 
-function Pizza() {
+function Order({ closeHour }) {
   return (
-    <div>
-      <img src="pizzas/spinaci.jpg" alt="spinaci pizza" />
-      <h3>Pizza Spinaci</h3>
-      <p>Tomato, mozarella, spinach, and ricotta cheese</p>
+    <div className="order">
+      <p>We're currently open until {closeHour}:00 </p>
+      <button className="btn">Order</button>
     </div>
   );
 }
